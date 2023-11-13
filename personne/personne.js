@@ -2,6 +2,7 @@
 import '../style.css';
 import { data } from '../data';
 import { nav } from '../nav';
+import { footer } from "../footer";
 
 const detailsPersonne = () => {
   // récupération des paramètres GET de l'url
@@ -17,17 +18,17 @@ const detailsPersonne = () => {
   console.log(personne);
 
   return `
-      <div class="card col col-sm-10 col-md-8 col-xl-6 mx-auto">
-        <img src="${personne.avatar}" class="card-img-top" alt="avatar de ${personne.prenom} ${personne.nom}">
-        <div class="card-body">
-          <h5 class="card-title">${personne.prenom} ${personne.nom}</h5>
-          <h5 class="card-title">${personne.date_de_naissance}</h5>
-          <h5 class="card-title">${personne.numero_de_telephone}</h5>
-          <h5 class="card-title">${personne.adresse_email}</h5>
-          <h5 class="card-title">${personne.description}</h5>
-        </div>
-      </div>
-    `;
+  <div class="max-w-2xl mx-auto bg-white shadow-md rounded-md overflow-hidden my-4">
+    <img src="${personne.avatar}" class="w-full object-cover" alt="avatar de ${personne.prenom} ${personne.nom}">
+    <div class="px-2 py-4"> <!-- Ajustement des classes de marges -->
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">${personne.prenom} ${personne.nom}</h2>
+      <h5 class="text-lg text-gray-700 mb-2">${personne.date_de_naissance}</h5>
+      <h5 class="text-lg text-gray-700 mb-2">${personne.numero_de_telephone}</h5>
+      <h5 class="text-lg text-gray-700 mb-2">${personne.adresse_email}</h5>
+      <p class="text-gray-700">${personne.description}</p>
+    </div>
+  </div>
+`;
 };
 
 document.querySelector('#app').innerHTML = `
@@ -38,16 +39,5 @@ document.querySelector('#app').innerHTML = `
       ${detailsPersonne()}
     </div>
   </main>
-  <footer class="bg-dark text-light py-4">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <p>&copy; 2023 iScourP. Tous droits réservés.</p>
-      </div>
-      <div class="col-md-6">
-        <p class="text-end">Contactez-nous : info@example.com</p>
-      </div>
-    </div>
-  </div>
-</footer>
+  ${footer}
 `;

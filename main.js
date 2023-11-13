@@ -1,8 +1,10 @@
+// main.js
 import * as bootstrap from "bootstrap";
 import "./style.css";
 import { data } from "./data";
 import { nav } from "./nav";
 import Fuse from "fuse.js";
+import { footer } from "./footer";
 
 function compareNoms(a, b) {
   const nomA = (a.prenom + " " + a.nom).toUpperCase();
@@ -26,8 +28,8 @@ const fuseExact = new Fuse(data, {
 
 const fuseStartsWith = new Fuse(data, {
   keys: ["prenom", "nom"],
-  threshold: 0.1, // Seuil plus bas pour les correspondances de début
-  minMatchCharLength: 1, // Match dès la première lettre
+  threshold: 0.1,
+  minMatchCharLength: 1,
   useExtendedSearch: true,
 });
 
@@ -36,13 +38,13 @@ const listePersonnes = (filteredData = data) => {
   for (let i = 0; i < filteredData.length; i++) {
     const personne = filteredData[i];
     let personneCard = `
-      <a class="card col-5 col-md-3" href="/personne/?id=${personne.id}">
-        <img src="${personne.avatar}" class="card-img-top" alt="avatar de ${personne.prenom} ${personne.nom}">
-        <div class="card-body">
-          <h5 class="card-title">${personne.prenom} ${personne.nom}</h5>
-        </div>
-      </a>
-    `;
+    <a class="max-w-xs mx-auto bg-white shadow-md rounded-md overflow-hidden my-4 block hover:shadow-lg transition duration-300 cursor-pointer" href="/personne/?id=${personne.id}">
+    <img src="${personne.avatar}" class="w-full h-48 object-cover" alt="avatar de ${personne.prenom} ${personne.nom}">
+    <div class="p-4">
+      <h5 class="text-xl font-bold text-gray-800 mb-2">${personne.prenom} ${personne.nom}</h5>
+    </div>
+  </a>
+`;
     html += personneCard;
   }
   return html;
@@ -62,26 +64,13 @@ document.querySelector("#app").innerHTML = `
       </div>
     </div>
   </main>
-
-  <footer class="bg-dark text-light py-4">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <p>&copy; 2023 iScourP. Tous droits réservés.</p>
-        </div>
-        <div class="col-md-6">
-          <p class="text-end">Contactez-nous : info@example.com</p>
-        </div>
-      </div>
-    </div>
-  </footer>
-`;
+  ${footer}
+  `;
 
 function handleSearch() {
   const searchText = searchInput.value;
 
   if (searchText === "") {
-    // Si la barre de recherche est vide, affichez tous les éléments
     document.querySelector("#personList").innerHTML = listePersonnes();
   } else {
     const resultExact = fuseExact.search(searchText);
