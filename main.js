@@ -1,38 +1,38 @@
-import * as bootstrap from 'bootstrap';
-import './style.scss';
-import { data } from './data';
-import { nav } from './nav';
-import Fuse from 'fuse.js';
+import * as bootstrap from "bootstrap";
+import "./style.css";
+import { data } from "./data";
+import { nav } from "./nav";
+import Fuse from "fuse.js";
 
 function compareNoms(a, b) {
-  const nomA = (a.prenom + ' ' + a.nom).toUpperCase();
-  const nomB = (b.prenom + ' ' + b.nom).toUpperCase();
+  const nomA = (a.prenom + " " + a.nom).toUpperCase();
+  const nomB = (b.prenom + " " + b.nom).toUpperCase();
 
-  if (nomA > nomB) {
+  if (nomA < nomB) {
     return -1;
   }
-  if (nomA < nomB) {
+  if (nomA > nomB) {
     return 1;
   }
   return 0;
 }
 
 const fuseExact = new Fuse(data, {
-  keys: ['prenom', 'nom'],
+  keys: ["prenom", "nom"],
   threshold: 0.2,
   minMatchCharLength: 3,
   useExtendedSearch: true,
 });
 
 const fuseStartsWith = new Fuse(data, {
-  keys: ['prenom', 'nom'],
+  keys: ["prenom", "nom"],
   threshold: 0.1, // Seuil plus bas pour les correspondances de début
   minMatchCharLength: 1, // Match dès la première lettre
   useExtendedSearch: true,
 });
 
 const listePersonnes = (filteredData = data) => {
-  let html = '';
+  let html = "";
   for (let i = 0; i < filteredData.length; i++) {
     const personne = filteredData[i];
     let personneCard = `
@@ -48,7 +48,7 @@ const listePersonnes = (filteredData = data) => {
   return html;
 };
 
-document.querySelector('#app').innerHTML = `
+document.querySelector("#app").innerHTML = `
   <main>
     ${nav}
     <div class="container-fluid my-4">
@@ -80,17 +80,22 @@ document.querySelector('#app').innerHTML = `
 function handleSearch() {
   const searchText = searchInput.value;
 
-  if (searchText === '') {
+  if (searchText === "") {
     // Si la barre de recherche est vide, affichez tous les éléments
-    document.querySelector('#personList').innerHTML = listePersonnes();
+    document.querySelector("#personList").innerHTML = listePersonnes();
   } else {
     const resultExact = fuseExact.search(searchText);
     const resultStartsWith = fuseStartsWith.search(searchText);
     const combinedResults = [...resultExact, ...resultStartsWith];
-    const uniqueResults = Array.from(new Set(combinedResults.map((item) => item.item.id)));
-    const filteredData = uniqueResults.map((id) => data.find((item) => item.id === id));
-    document.querySelector('#personList').innerHTML = listePersonnes(filteredData);
+    const uniqueResults = Array.from(
+      new Set(combinedResults.map((item) => item.item.id))
+    );
+    const filteredData = uniqueResults.map((id) =>
+      data.find((item) => item.id === id)
+    );
+    document.querySelector("#personList").innerHTML =
+      listePersonnes(filteredData);
   }
 }
 
-searchInput.addEventListener('input', handleSearch);
+searchInput.addEventListener("input", handleSearch);
